@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.27428.2037
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Taller3", "Taller3\Taller3.vcxproj", "{F7D8CE3C-2ABC-4044-A2D1-0479F352F08B}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|x64 = Debug|x64
+		Debug|x86 = Debug|x86
+		Release|x64 = Release|x64
+		Release|x86 = Release|x86
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{F7D8CE3C-2ABC-4044-A2D1-0479F352F08B}.Debug|x64.ActiveCfg = Debug|x64
+		{F7D8CE3C-2ABC-4044-A2D1-0479F352F08B}.Debug|x64.Build.0 = Debug|x64
+		{F7D8CE3C-2ABC-4044-A2D1-0479F352F08B}.Debug|x86.ActiveCfg = Debug|Win32
+		{F7D8CE3C-2ABC-4044-A2D1-0479F352F08B}.Debug|x86.Build.0 = Debug|Win32
+		{F7D8CE3C-2ABC-4044-A2D1-0479F352F08B}.Release|x64.ActiveCfg = Release|x64
+		{F7D8CE3C-2ABC-4044-A2D1-0479F352F08B}.Release|x64.Build.0 = Release|x64
+		{F7D8CE3C-2ABC-4044-A2D1-0479F352F08B}.Release|x86.ActiveCfg = Release|Win32
+		{F7D8CE3C-2ABC-4044-A2D1-0479F352F08B}.Release|x86.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {74998DC3-761A-4DA8-8384-8A3D553706BD}
+	EndGlobalSection
+EndGlobal
