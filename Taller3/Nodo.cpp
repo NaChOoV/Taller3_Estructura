@@ -3,9 +3,9 @@
 #include "Flaite.h"
 
 
-Nodo::Nodo(string nombre, string alias, int RUN, string peligro, string delito)
+Nodo::Nodo(Flaite flaite)
 {
-	this->flaite = Flaite(nombre, alias, RUN, peligro, delito);
+	this->flaite = flaite;
 	this->hDer = nullptr;
 	this->HIzq = nullptr;
 }

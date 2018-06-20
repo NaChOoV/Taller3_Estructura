@@ -3,7 +3,7 @@
 class Nodo
 {
 public:
-	Nodo(string nombre, string alias, int RUN, string peligro, string delito);
+	Nodo(Flaite flaite);
 	~Nodo();
 
 	Nodo* getIzq();

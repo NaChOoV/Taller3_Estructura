@@ -6,12 +6,17 @@ public:
 	ABB();
 	~ABB();
 
+	void llamarOrden(int n);
 	void preOrden(Nodo* nodoAux);
 	void inOrden(Nodo* nodoAux);
 	void postOrden(Nodo* nodoAux);
 	void porNivel();
-	void porNivelRecursivo(Nodo* nodoAux, int n, int nMax);
+	void porNivelRecursivo(Nodo* nodoAux, int n, int n2);
 	int nivelMasAlto(Nodo* nodoAux, int n);
+
+	void llamarAgregar(Flaite flaite);
+	Nodo* agregarRecursivoAux(Flaite flaite, Nodo* nodoAux);
+
 
 	void agregarFlaite(Nodo* nodoAux, Nodo* nuevoNodo );
 	void capturarFlaite(Nodo* nodoAux, int RUN);

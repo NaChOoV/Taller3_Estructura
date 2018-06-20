@@ -1,10 +1,15 @@
 #include "stdafx.h"
 #include "Menu.h"
+#include "Nodo.h"
+#include <Windows.h>
+#include <MMSystem.h>
 #include<fstream>
 #include<sstream>
 #include<cstring>
+#include <string>
 #include "ABB.h"
 #include <iostream> 
+
 using namespace std;
 
 
@@ -12,6 +17,7 @@ Menu::Menu()
 {
 	this->arbolABB = ABB();
 	cargarArchivos();
+	PlaySound(TEXT("ordenypatria.wav"),NULL,SND_ASYNC);
 }
 
 
@@ -21,6 +27,7 @@ Menu::~Menu()
 
 void Menu::menuPrincipal()
 {
+
 	desplegarMenu0();
 	bool flag = false;
 	char opcion;
@@ -33,21 +40,12 @@ void Menu::menuPrincipal()
 		switch (opcion)
 		{
 		case '1':
-			if (arbolABB.getRaiz() == nullptr) {
-				cout << "LOS ARBOLES SE ENCUENTRAN VACIOS." << endl;
-				break;
-			}
 			desplegarDelincuentes();
 			break;
 		case '2':
 			modificarArbol();
-
 			break;
 		case '3':
-			if (arbolABB.getRaiz() == nullptr) {
-				cout << "LOS ARBOLES SE ENCUENTRAN VACIOS." << endl;
-				break;
-			}
 			buscarDelincuentes();
 			break;
 		case '4':
@@ -65,6 +63,11 @@ void Menu::menuPrincipal()
 
 void Menu::desplegarDelincuentes()
 {
+	if (arbolABB.getRaiz() == nullptr) {
+		cout << "LOS ARBOLES SE ENCUENTRAN VACIOS." << endl;
+		system("pause");
+		return;
+	}
 	desplegarMenu1();
 	bool flag = false;
 	char opcion;
@@ -78,26 +81,26 @@ void Menu::desplegarDelincuentes()
 		{
 		case '1':
 			cout << "::::::::::::::::ARBOL ABB PRE-ORDEN::::::::::::::" << endl;
-			arbolABB.preOrden(arbolABB.getRaiz());
+			arbolABB.llamarOrden(1);
 			cout << "..::::::::::::::ARBOL AVL PRE-ORDEN::::::::::::.." << endl;
 			// arbolAVL.preOrden(arbolABB.getRaiz())
 			break;
 			
 		case '2':
 			cout << "::::::::::::::::ARBOL ABB IN-ORDEN::::::::::::::" << endl;
-			arbolABB.inOrden(arbolABB.getRaiz());
+			arbolABB.llamarOrden(2);
 			cout << "..::::::::::::::ARBOL AVL IN-ORDEN::::::::::::::" << endl;
 			// arbolAVL.inOrden(arbolABB.getRaiz())
 			break;
 		case '3':
 			cout << "::::::::::::::::ARBOL ABB POST-ORDEN::::::::::::::" << endl;
-			arbolABB.postOrden(arbolABB.getRaiz());
+			arbolABB.llamarOrden(3);
 			cout << "::::::::::::::::ARBOL AVL POST-ORDEN::::::::::::::" << endl;
 			// arbolAVL.postOrden(arbolABB.getRaiz())
 			break;
 		case '4':
 			cout << "::::::::::::::::ARBOL ABB POR NIVEL::::::::::::::" << endl;
-			arbolABB.inOrden(arbolABB.getRaiz());
+			arbolABB.llamarOrden(4);
 			cout << "::::::::::::::::ARBOL AVL POR NIVEL::::::::::::::" << endl;
 			// arbolAVL.inOrden(arbolABB.getRaiz())
 			break;
@@ -117,6 +120,7 @@ void Menu::modificarArbol()
 {
 	desplegarMenu2();
 	bool flag = false;
+	int run;
 	char opcion;
 	while (true) {
 		fflush(stdin);
@@ -129,11 +133,9 @@ void Menu::modificarArbol()
 		case '1':
 			break;
 		case '2':
-			if (arbolABB.getRaiz() == nullptr) {
-				cout << "LOS ARBOLES SE ENCUENTRAN VACIOS." << endl;
-				break;
-			}
-
+			cout << "Ingrese un RUN para capturar: ";
+			cin >> run;
+			arbolABB.capturarFlaite(arbolABB.getRaiz(), run);
 			break;
 		case '3':
 			flag = true;
@@ -221,31 +223,28 @@ void Menu::cargarArchivos()
 {
 	ifstream archivo;
 	archivo.open("datos.txt",ios::in);
+	string nombre, run, alias, peligro, delito, linea;
 	if (archivo.fail()) {
 		cout << "ERROR: No se pudo abrir el archivo datos.txt" << endl;
 		system("pause");
 		exit(1);
 	}
 	while (!archivo.eof()) {
-		fflush(stdin);
-		string linea;
 		getline(archivo, linea);
 
-		string run = linea.substr(0, 8);
+		run = linea.substr(0, 8);
 		linea = linea.substr(9);
-		string nombre = linea.substr(0, linea.find(","));
+		nombre = linea.substr(0, linea.find(","));
 		linea = linea.substr(linea.find(",") + 1);
-		string alias = linea.substr(0, linea.find(","));
+		alias = linea.substr(0, linea.find(","));
 		linea = linea.substr(linea.find(",") + 1);
-		string peligro = linea.substr(0, linea.find(","));
+		peligro = linea.substr(0, linea.find(","));
 		linea = linea.substr(linea.find(",") + 1);
-		string delito = linea;
+		delito = linea;
 
-		std::string::size_type sz;
-		int RUN = std::stoi(run, &sz);
-		Nodo* nodoABB = &Nodo(nombre,alias,RUN,peligro,delito);
-		arbolABB.agregarFlaite(arbolABB.getRaiz(), nodoABB);
-		// Nodo* nodoAVL = &Nodo(nombre, alias, RUN, peligro, delito); creamos un nuevo nodo con diferente direccion 
+		Flaite flaite(nombre, alias, stoi(run), peligro, delito);
+
+		this->arbolABB.llamarAgregar(flaite);
 		// AGREGAMOS AL AVL
 
 	}

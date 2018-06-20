@@ -15,6 +15,28 @@ ABB::~ABB()
 {
 }
 
+void ABB::llamarOrden(int n) {
+
+	switch (n)
+	{
+	case 1:
+		this->preOrden(this->raiz);
+		break;
+	case 2:
+		this->inOrden(this->raiz);
+		break;
+	case 3:
+		this->postOrden(this->raiz);
+		break;
+	case 4:
+		this->porNivel();
+		break;
+	default:
+		break;
+	}
+
+}
+
 void ABB::preOrden(Nodo* nodoAux)
 {
 	if (nodoAux == nullptr)
@@ -46,24 +68,28 @@ void ABB::porNivel()
 {
 	int nMax = nivelMasAlto(this->raiz, 0);
 	for (int i = 0; i <= nMax; i++) {
-		porNivelRecursivo(this->raiz, i, nMax);
+		this->porNivelRecursivo(this->raiz, 0, i);
 	}
 }
 
-void ABB::porNivelRecursivo(Nodo* nodoAux,int n,int nMax) 
+void ABB::porNivelRecursivo(Nodo* nodoAux,int nActual,int nIdeal) 
 {
-	if (n == nMax) {
+	if (nActual == nIdeal) {
 		this->imprimirFlaite(nodoAux->getFlaite(), false);
 		return;
 	}
-	n++;
+	nActual++;
 	if (nodoAux->getDer() == nullptr && nodoAux->getIzq() == nullptr) return;
 	if (nodoAux->getDer() != nullptr && nodoAux->getIzq() != nullptr) {
-		this->porNivelRecursivo(nodoAux->getIzq(), n, nMax);
-		this->porNivelRecursivo(nodoAux->getDer(), n, nMax);
-	} else if (nodoAux->getDer() != nullptr && nodoAux->getIzq() == nullptr)
-		this->porNivelRecursivo(nodoAux->getIzq(), n, nMax);
-	this->porNivelRecursivo(nodoAux->getDer(), n, nMax);
+		this->porNivelRecursivo(nodoAux->getIzq(), nActual, nIdeal);
+		this->porNivelRecursivo(nodoAux->getDer(), nActual, nIdeal);
+		return;
+	}
+	else if (nodoAux->getDer() != nullptr && nodoAux->getIzq() == nullptr) {
+		this->porNivelRecursivo(nodoAux->getDer(), nActual, nIdeal);
+		return;
+	}
+	this->porNivelRecursivo(nodoAux->getIzq(), nActual, nIdeal);
 }
 
 int ABB::nivelMasAlto(Nodo* nodoAux, int n)
@@ -84,15 +110,28 @@ int ABB::nivelMasAlto(Nodo* nodoAux, int n)
 void ABB::agregarFlaite(Nodo* nodoAux, Nodo* nuevoNodo)
 {
 	if (nodoAux == nullptr) {
-		this->raiz = nuevoNodo;
+		nodoAux = nuevoNodo;
 		return;
 	}
-	if (nodoAux->getFlaite().getRUN() == nuevoNodo->getFlaite().getRUN())
+	if (nodoAux->getFlaite().getRUN() == nuevoNodo->getFlaite().getRUN()){
+		cout << "El flaite con el RUN " << nuevoNodo->getFlaite().getRUN() << " ya existe!" << endl;
 		return;
-	if (nodoAux->getFlaite().getRUN() < nuevoNodo->getFlaite().getRUN()) 
-		agregarFlaite(nodoAux->getDer(), nuevoNodo);
-	else if (nodoAux->getFlaite().getRUN() > nuevoNodo->getFlaite().getRUN())
-		agregarFlaite(nodoAux->getIzq(), nuevoNodo);
+	}
+	if (nodoAux->getFlaite().getRUN() < nuevoNodo->getFlaite().getRUN()) agregarFlaite(nodoAux->getDer(), nuevoNodo);
+	else agregarFlaite(nodoAux->getIzq(), nuevoNodo);
+}
+
+void ABB::llamarAgregar(Flaite flaite) 
+{
+	this->raiz = agregarRecursivoAux(flaite, this->raiz);
+}
+Nodo* ABB::agregarRecursivoAux(Flaite flaite, Nodo* nodoAux) 
+{
+	if (nodoAux == nullptr) return new Nodo(flaite);
+	if (flaite.getRUN() == nodoAux->getFlaite().getRUN()) return nodoAux;
+	if (nodoAux->getFlaite().getRUN() < flaite.getRUN()) nodoAux->setDer(this->agregarRecursivoAux(flaite, nodoAux->getDer()));
+	else nodoAux->setIzq(this->agregarRecursivoAux(flaite, nodoAux->getIzq()));
+	return nodoAux;
 }
 
 void ABB::capturarFlaite(Nodo* nodoAux, int RUN)
@@ -120,11 +159,8 @@ Nodo* ABB::unirNodo(Nodo* nodoIzq, Nodo* nodoDer)
 }
 
 bool ABB::existeFlaite(Nodo* nodoAux,int RUN) {
-	if (nodoAux == nullptr)
-		return false;
-	if (nodoAux->getFlaite().getRUN() == RUN) {
-		return true;
-	}
+	if (nodoAux == nullptr) return false;
+	if (nodoAux->getFlaite().getRUN() == RUN) return true;
 	if (nodoAux->getFlaite().getRUN() < RUN)
 		buscarRUN(nodoAux->getIzq(), RUN);
 	if (nodoAux->getFlaite().getRUN() > RUN)
@@ -145,8 +181,6 @@ void ABB::buscarRUN(Nodo* nodoAux, int RUN)
 
 void ABB::buscarCategoria(Nodo* nodoAux, string delito)
 {
-	if (nodoAux == nullptr)
-		return;
 	// no se como comparar los string con uppercase
 }
 
@@ -160,7 +194,7 @@ void ABB::imprimirFlaite(Flaite flaite, bool categ)
 	aux = flaite.getAlias();
 	n = (int)aux.length();
 	cout << "*Alias: " << flaite.getAlias();                    
-	for (int i = 0;i < 20 - n;i++) { cout << " "; }
+	for (int i = 0;i < 21 - n;i++) { cout << " "; }
 	cout << "| *Peligrosidad: " << flaite.getPeligro() << endl;
 
 	if (!categ) {cout << "*Delito: " << flaite.getDelito() << endl;}

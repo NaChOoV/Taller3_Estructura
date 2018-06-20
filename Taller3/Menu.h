@@ -7,6 +7,7 @@ public:
 	Menu();
 	~Menu();
 
+	void cargarArchivos();
 	void menuPrincipal();
 private:
 	ABB arbolABB;
@@ -14,7 +15,6 @@ private:
 	void desplegarDelincuentes();
 	void modificarArbol();
 	void buscarDelincuentes();
-	void cargarArchivos();
 	void desplegarMenu0();
 	void desplegarMenu1();
 	void desplegarMenu2();

@@ -40,8 +40,6 @@ string Flaite::getPeligro()
 	return this->peligro;
 }
 
-
-
 string Flaite::getDelito()
 {
 	return this->delito;
