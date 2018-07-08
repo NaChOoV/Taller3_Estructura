@@ -80,27 +80,27 @@ void Menu::desplegarDelincuentes()
 		switch (opcion)
 		{
 		case '1':
-			cout << "::::::::::::::::ARBOL ABB PRE-ORDEN::::::::::::::" << endl;
-			arbolABB.llamarOrden(1);
+			cout << "\n::::::::::::::::ARBOL ABB PRE-ORDEN::::::::::::::" << endl;
+			arbolABB.preOrden(arbolABB.getRaiz());
 			cout << "..::::::::::::::ARBOL AVL PRE-ORDEN::::::::::::.." << endl;
 			// arbolAVL.preOrden(arbolABB.getRaiz())
 			break;
 			
 		case '2':
-			cout << "::::::::::::::::ARBOL ABB IN-ORDEN::::::::::::::" << endl;
-			arbolABB.llamarOrden(2);
+			cout << "\n::::::::::::::::ARBOL ABB IN-ORDEN::::::::::::::" << endl;
+			arbolABB.inOrden(arbolABB.getRaiz());
 			cout << "..::::::::::::::ARBOL AVL IN-ORDEN::::::::::::::" << endl;
 			// arbolAVL.inOrden(arbolABB.getRaiz())
 			break;
 		case '3':
-			cout << "::::::::::::::::ARBOL ABB POST-ORDEN::::::::::::::" << endl;
-			arbolABB.llamarOrden(3);
+			cout << "\n::::::::::::::::ARBOL ABB POST-ORDEN::::::::::::::" << endl;
+			arbolABB.postOrden(arbolABB.getRaiz());
 			cout << "::::::::::::::::ARBOL AVL POST-ORDEN::::::::::::::" << endl;
 			// arbolAVL.postOrden(arbolABB.getRaiz())
 			break;
 		case '4':
-			cout << "::::::::::::::::ARBOL ABB POR NIVEL::::::::::::::" << endl;
-			arbolABB.llamarOrden(4);
+			cout << "\n::::::::::::::::ARBOL ABB POR NIVEL::::::::::::::" << endl;
+			arbolABB.porNivel();
 			cout << "::::::::::::::::ARBOL AVL POR NIVEL::::::::::::::" << endl;
 			// arbolAVL.inOrden(arbolABB.getRaiz())
 			break;
@@ -130,14 +130,19 @@ void Menu::modificarArbol()
 		cin.ignore();
 		switch (opcion)
 		{
-		case '1':
+		case '1': // Agregamos un delincuente en ambos arboles
 			break;
-		case '2':
+		case '2': // Elimiamos un delincuente de ambos arboles
+			if (arbolABB.getRaiz() == nullptr) {
+				cout << "LOS ARBOLES SE ENCUENTRAN VACIOS." << endl;
+				system("pause");
+				return;
+			}
 			cout << "Ingrese un RUN para capturar: ";
 			cin >> run;
-			arbolABB.capturarFlaite(arbolABB.getRaiz(), run);
+
 			break;
-		case '3':
+		case '3': // Al menu principal
 			flag = true;
 			break;
 		default:
@@ -151,6 +156,11 @@ void Menu::modificarArbol()
 
 void Menu::buscarDelincuentes()
 {
+	if (arbolABB.getRaiz() == nullptr) {
+		cout << "LOS ARBOLES SE ENCUENTRAN VACIOS." << endl;
+		system("pause");
+		return;
+	}
 	desplegarMenu3();
 	bool flag = false;
 	string categoria;
@@ -164,16 +174,36 @@ void Menu::buscarDelincuentes()
 		cin.ignore();
 		switch (opcion)
 		{
-		case '1':
-			cout << "Ingrese el RUN a consultar: ";
-			cin >> RUN;
-			arbolABB.buscarRUN(arbolABB.getRaiz(), RUN);
+		case '1': // Buscamos por RUN y se miden los tiempos
+			cout << "\n Ingrese el RUN a consultar: "; cin >> RUN;
+			cout << endl;
 			
-		case '2':
-			cout << "Ingrese la categoria a consultar: ";
+			while (cin.fail()) {
+				cout << " ERROR, el RUN ingresado no es valido!" << endl;
+				cin.clear();
+				cin.ignore(256, '\n');
+				cout << " Ingrese un nuevo RUN: "; cin >> RUN;
+				cout << endl;
+
+			}
+			
+			if (!arbolABB.existeFlaite(arbolABB.getRaiz(), RUN)) {
+				cout << "No existe flaite con el RUN ingresado." << endl;
+				break;
+			}
+				
+			arbolABB.buscarRUN(arbolABB.getRaiz(), RUN);
+			break;
+			
+		case '2': // Buscamos por categoria y se miden los tiempos
+			cout << "\n Ingrese la categoria a consultar: ";
 			cin >> categoria;
+			cout << "\n ||Los/el delincuentes son: \n" << endl;
 			arbolABB.buscarCategoria(arbolABB.getRaiz(), categoria);
-		case '3':
+			break;
+		case '3': // Al menu principal
+			flag = true;
+			break;
 		default:
 			cout << "\n Opcion invalida. " << endl;
 			break;
@@ -197,7 +227,7 @@ void Menu::desplegarMenu0()
 }
 void Menu::desplegarMenu1()
 {
-	cout << "================DESPLEGAR ARBOLES===================" << endl;
+	cout << "\n================DESPLEGAR ARBOLES===================" << endl;
 	cout << "[1]  Pre-Orden                  " << endl;
 	cout << "[2]  In-Orden                   " << endl;
 	cout << "[3]  Post-Orden                 " << endl;
@@ -207,16 +237,18 @@ void Menu::desplegarMenu1()
 }
 void Menu::desplegarMenu2()
 {
-	cout << "================MODIFICAR ARBOLES===================" << endl;
+	cout << "\n================MODIFICAR ARBOLES===================" << endl;
 	cout << "[1]  Agregar delincuente        " << endl;
 	cout << "[2]  Capturar delincuente       " << endl;
+	cout << "[3]  Regresar al menu           " << endl;
 
 }
 void Menu::desplegarMenu3()
 {
-	cout << "================BUSQUEDA ARBOLES====================" << endl;
+	cout << "\n================BUSQUEDA ARBOLES====================" << endl;
 	cout << "[1]  Buscar delincuente dado un RUN      " << endl;
 	cout << "[2]  Buscar delincuentes por categoria   " << endl;
+	cout << "[3]  Regresar al menu                    " << endl;
 }
 
 void Menu::cargarArchivos()
@@ -229,6 +261,7 @@ void Menu::cargarArchivos()
 		system("pause");
 		exit(1);
 	}
+
 	while (!archivo.eof()) {
 		getline(archivo, linea);
 
@@ -244,11 +277,12 @@ void Menu::cargarArchivos()
 
 		Flaite flaite(nombre, alias, stoi(run), peligro, delito);
 
-		this->arbolABB.llamarAgregar(flaite);
+		this->arbolABB.agregarFlaite(arbolABB.getRaiz(),flaite);
 		// AGREGAMOS AL AVL
 
 	}
 	archivo.close();
+
 
 }
 

@@ -6,7 +6,6 @@ public:
 	ABB();
 	~ABB();
 
-	void llamarOrden(int n);
 	void preOrden(Nodo* nodoAux);
 	void inOrden(Nodo* nodoAux);
 	void postOrden(Nodo* nodoAux);
@@ -14,21 +13,20 @@ public:
 	void porNivelRecursivo(Nodo* nodoAux, int n, int n2);
 	int nivelMasAlto(Nodo* nodoAux, int n);
 
-	void llamarAgregar(Flaite flaite);
-	Nodo* agregarRecursivoAux(Flaite flaite, Nodo* nodoAux);
+	Nodo* nuevoNodo(Flaite);
+	void agregarFlaite(Nodo*& nodoAux, Flaite flaite );
 
 
-	void agregarFlaite(Nodo* nodoAux, Nodo* nuevoNodo );
-	void capturarFlaite(Nodo* nodoAux, int RUN);
-	Nodo* unirNodo(Nodo* nodoIzq, Nodo* nodoDer);
+
 	bool existeFlaite(Nodo* nodoAux,int RUN);
 	void buscarRUN(Nodo* nodoAux, int RUN);
 	
-	void buscarCategoria(Nodo* nodoAux, string delito);
+	void buscarCategoria(Nodo*, string );
+	bool compararCategoria(string, string);
 	
-	void imprimirFlaite(Flaite flaite, bool categ);
+	void imprimirFlaite(Flaite, bool);
 	
-	Nodo* getRaiz();
+	Nodo*& getRaiz();
 
 private:
 	Nodo * raiz;

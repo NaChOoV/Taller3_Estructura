@@ -15,27 +15,6 @@ ABB::~ABB()
 {
 }
 
-void ABB::llamarOrden(int n) {
-
-	switch (n)
-	{
-	case 1:
-		this->preOrden(this->raiz);
-		break;
-	case 2:
-		this->inOrden(this->raiz);
-		break;
-	case 3:
-		this->postOrden(this->raiz);
-		break;
-	case 4:
-		this->porNivel();
-		break;
-	default:
-		break;
-	}
-
-}
 
 void ABB::preOrden(Nodo* nodoAux)
 {
@@ -107,69 +86,40 @@ int ABB::nivelMasAlto(Nodo* nodoAux, int n)
 
 }
 
-void ABB::agregarFlaite(Nodo* nodoAux, Nodo* nuevoNodo)
+Nodo* ABB::nuevoNodo(Flaite flaite) {
+	Nodo* nuevoNodo = new Nodo(flaite);
+	return nuevoNodo;
+}
+
+void ABB::agregarFlaite(Nodo*& nodoAux, Flaite flaite)
 {
 	if (nodoAux == nullptr) {
-		nodoAux = nuevoNodo;
-		return;
+		nodoAux = new Nodo(flaite);
 	}
-	if (nodoAux->getFlaite().getRUN() == nuevoNodo->getFlaite().getRUN()){
-		cout << "El flaite con el RUN " << nuevoNodo->getFlaite().getRUN() << " ya existe!" << endl;
-		return;
-	}
-	if (nodoAux->getFlaite().getRUN() < nuevoNodo->getFlaite().getRUN()) agregarFlaite(nodoAux->getDer(), nuevoNodo);
-	else agregarFlaite(nodoAux->getIzq(), nuevoNodo);
-}
-
-void ABB::llamarAgregar(Flaite flaite) 
-{
-	this->raiz = agregarRecursivoAux(flaite, this->raiz);
-}
-Nodo* ABB::agregarRecursivoAux(Flaite flaite, Nodo* nodoAux) 
-{
-	if (nodoAux == nullptr) return new Nodo(flaite);
-	if (flaite.getRUN() == nodoAux->getFlaite().getRUN()) return nodoAux;
-	if (nodoAux->getFlaite().getRUN() < flaite.getRUN()) nodoAux->setDer(this->agregarRecursivoAux(flaite, nodoAux->getDer()));
-	else nodoAux->setIzq(this->agregarRecursivoAux(flaite, nodoAux->getIzq()));
-	return nodoAux;
-}
-
-void ABB::capturarFlaite(Nodo* nodoAux, int RUN)
-{
-	if (nodoAux == nullptr) return;
-	if (RUN > nodoAux->getFlaite().getRUN())
-		capturarFlaite(nodoAux->getDer(), RUN);
-	else if (RUN < nodoAux->getFlaite().getRUN())
-		capturarFlaite(nodoAux->getIzq(), RUN);
 	else {
-		Nodo* nodo = nodoAux;
-		nodoAux = this->unirNodo(nodoAux->getIzq(), nodoAux->getDer());
-		delete nodo;
+		if (nodoAux->getFlaite().getRUN() < flaite.getRUN()) {
+			agregarFlaite(nodoAux->getDer(), flaite);
+		}		
+		else {
+			Nodo* nodoIzq = nodoAux->getIzq();
+			agregarFlaite(nodoAux->getIzq(), flaite);		
+		}
 	}
 }
 
-Nodo* ABB::unirNodo(Nodo* nodoIzq, Nodo* nodoDer)
-{
-	if (nodoIzq == nullptr) return nodoDer;
-	if (nodoDer == nullptr) return nodoIzq;
-	Nodo* medio = unirNodo(nodoIzq->getDer(), nodoDer->getIzq());
-	nodoIzq->setDer(medio);
-	nodoDer->setIzq(nodoIzq);
-	return nodoDer;
-}
+
+
+
 
 bool ABB::existeFlaite(Nodo* nodoAux,int RUN) {
 	if (nodoAux == nullptr) return false;
 	if (nodoAux->getFlaite().getRUN() == RUN) return true;
-	if (nodoAux->getFlaite().getRUN() < RUN)
-		buscarRUN(nodoAux->getIzq(), RUN);
-	if (nodoAux->getFlaite().getRUN() > RUN)
-		buscarRUN(nodoAux->getDer(), RUN);
-	return false;
+	return existeFlaite(nodoAux->getIzq(), RUN) || existeFlaite(nodoAux->getDer(), RUN);
 }
 
 void ABB::buscarRUN(Nodo* nodoAux, int RUN)
 {
+	if (nodoAux == nullptr) return;
 	if (nodoAux->getFlaite().getRUN() == RUN ) {
 		this->imprimirFlaite(nodoAux->getFlaite(), false);
 		return;
@@ -181,7 +131,19 @@ void ABB::buscarRUN(Nodo* nodoAux, int RUN)
 
 void ABB::buscarCategoria(Nodo* nodoAux, string delito)
 {
-	// no se como comparar los string con uppercase
+	if (nodoAux == nullptr) return;
+	if (compararCategoria(nodoAux->getFlaite().getDelito(), delito))
+		this->imprimirFlaite(nodoAux->getFlaite(), true);
+	buscarCategoria(nodoAux->getIzq(), delito);
+	buscarCategoria(nodoAux->getDer(), delito);
+}
+
+bool ABB::compararCategoria(string del1, string del2)
+{
+	for (int i = 0;i < del1.length();i++) del1[i] = toupper(del1[i]);
+	for (int i = 0;i < del2.length();i++) del2[i] = toupper(del2[i]);
+	if (del1.compare(del2)) return false;
+	return true;
 }
 
 void ABB::imprimirFlaite(Flaite flaite, bool categ) 
@@ -199,7 +161,7 @@ void ABB::imprimirFlaite(Flaite flaite, bool categ)
 
 	if (!categ) {cout << "*Delito: " << flaite.getDelito() << endl;}
 }
-Nodo * ABB::getRaiz()
+Nodo *& ABB::getRaiz()
 {
 	return this->raiz;
 }

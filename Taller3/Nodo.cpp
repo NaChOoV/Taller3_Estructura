@@ -14,12 +14,12 @@ Nodo::~Nodo()
 {
 }
 
-Nodo * Nodo::getIzq()
+Nodo *& Nodo::getIzq()
 {
 	return this->HIzq ;
 }
 
-Nodo * Nodo::getDer()
+Nodo *& Nodo::getDer()
 {
 	return this->hDer;
 }
@@ -33,6 +33,7 @@ void Nodo::setDer(Nodo * nuevoNodo)
 {
 	this->hDer = nuevoNodo;
 }
+
 
 Flaite Nodo::getFlaite()
 {
