@@ -14,6 +14,7 @@ private:
 
 	void desplegarDelincuentes();
 	void modificarArbol();
+	void crearDelincuente();
 	void buscarDelincuentes();
 	void desplegarMenu0();
 	void desplegarMenu1();

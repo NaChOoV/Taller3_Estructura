@@ -24,6 +24,7 @@ Nodo *& Nodo::getDer()
 	return this->hDer;
 }
 
+
 void Nodo::setIzq(Nodo * nuevoNodo)
 {
 	this->HIzq = nuevoNodo;
@@ -32,6 +33,11 @@ void Nodo::setIzq(Nodo * nuevoNodo)
 void Nodo::setDer(Nodo * nuevoNodo)
 {
 	this->hDer = nuevoNodo;
+}
+
+void Nodo::setFlaite(Flaite flaite)
+{
+	this->flaite = flaite;
 }
 
 

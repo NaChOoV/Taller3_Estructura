@@ -73,7 +73,7 @@ void ABB::porNivelRecursivo(Nodo* nodoAux,int nActual,int nIdeal)
 
 int ABB::nivelMasAlto(Nodo* nodoAux, int n)
 {	
-	if (nodoAux->getDer() == nullptr && nodoAux->getIzq() == nullptr) return n;
+	if (nodoAux->getDer() == nullptr && nodoAux->getIzq() == nullptr) return n; 
 	n++;
 	if (nodoAux->getDer() != nullptr && nodoAux->getIzq() != nullptr) {
 		int n1 = nivelMasAlto(nodoAux->getDer(), n);
@@ -83,30 +83,44 @@ int ABB::nivelMasAlto(Nodo* nodoAux, int n)
 	else if (nodoAux->getDer() != nullptr && nodoAux->getIzq() == nullptr)
 		return nivelMasAlto(nodoAux->getDer(), n);
 	return nivelMasAlto(nodoAux->getIzq(), n);
-
 }
 
-Nodo* ABB::nuevoNodo(Flaite flaite) {
-	Nodo* nuevoNodo = new Nodo(flaite);
-	return nuevoNodo;
-}
 
-void ABB::agregarFlaite(Nodo*& nodoAux, Flaite flaite)
+
+void ABB::agregar_ABB(Nodo*& nodoAux, Flaite flaite)
 {
-	if (nodoAux == nullptr) {
-		nodoAux = new Nodo(flaite);
+	if (nodoAux == nullptr)  nodoAux = new Nodo(flaite);
+	else {
+		if (nodoAux->getFlaite().getRUN() < flaite.getRUN()) agregar_ABB(nodoAux->getDer(), flaite);			
+		else agregar_ABB(nodoAux->getIzq(), flaite);
+	}
+}
+
+void ABB::eliminar_ABB(Nodo*& nodoAux, int RUN) {
+	if (nodoAux == nullptr) return; // vacio
+	else if (RUN < nodoAux->getFlaite().getRUN()) eliminar_ABB(nodoAux->getIzq(), RUN); // Izquierda
+	else if (RUN > nodoAux->getFlaite().getRUN()) eliminar_ABB(nodoAux->getDer(), RUN); // Derecha
+	else  eliminar_NodoABB(nodoAux); //Encontrado	
+}
+
+void ABB::eliminar_NodoABB(Nodo*& nodoAux) {
+	if (nodoAux->getDer() && nodoAux->getIzq()) { // 2 hijos
+		Nodo*& nodo_menor = minimo_masIzquierdo(nodoAux->getDer());
+		nodoAux->setFlaite(nodo_menor->getFlaite());
+		eliminar_NodoABB(nodo_menor);
 	}
 	else {
-		if (nodoAux->getFlaite().getRUN() < flaite.getRUN()) {
-			agregarFlaite(nodoAux->getDer(), flaite);
-		}		
-		else {
-			Nodo* nodoIzq = nodoAux->getIzq();
-			agregarFlaite(nodoAux->getIzq(), flaite);		
-		}
+		Nodo* nodoEliminar = nodoAux;
+		if (nodoAux->getIzq()) nodoAux = nodoAux->getIzq(); // 1 hijo izquierdo
+		else if (nodoAux->getDer()) nodoAux = nodoAux->getDer(); // 1 hijo derecho
+		else nodoAux = nullptr; // 0 hijos
+		nodoEliminar->~Nodo();
 	}
 }
-
+Nodo*& ABB::minimo_masIzquierdo(Nodo*& nodoAux) {
+	if (nodoAux->getIzq()) minimo_masIzquierdo(nodoAux->getIzq());
+	else return nodoAux;
+}
 
 
 

@@ -13,10 +13,11 @@ public:
 	void porNivelRecursivo(Nodo* nodoAux, int n, int n2);
 	int nivelMasAlto(Nodo* nodoAux, int n);
 
-	Nodo* nuevoNodo(Flaite);
-	void agregarFlaite(Nodo*& nodoAux, Flaite flaite );
+	void agregar_ABB(Nodo*& nodoAux, Flaite flaite);
 
-
+	void eliminar_ABB(Nodo*&, int);
+	void eliminar_NodoABB(Nodo*&);
+	Nodo*& minimo_masIzquierdo(Nodo*&);
 
 	bool existeFlaite(Nodo* nodoAux,int RUN);
 	void buscarRUN(Nodo* nodoAux, int RUN);

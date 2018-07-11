@@ -120,7 +120,7 @@ void Menu::modificarArbol()
 {
 	desplegarMenu2();
 	bool flag = false;
-	int run;
+	int RUN;
 	char opcion;
 	while (true) {
 		fflush(stdin);
@@ -133,14 +133,22 @@ void Menu::modificarArbol()
 		case '1': // Agregamos un delincuente en ambos arboles
 			break;
 		case '2': // Elimiamos un delincuente de ambos arboles
-			if (arbolABB.getRaiz() == nullptr) {
-				cout << "LOS ARBOLES SE ENCUENTRAN VACIOS." << endl;
-				system("pause");
-				return;
-			}
-			cout << "Ingrese un RUN para capturar: ";
-			cin >> run;
+			cout << "\n Ingrese el RUN del flaite a eliminar: "; cin >> RUN;
+			cout << endl;
 
+			while (cin.fail()) {
+				cout << " ERROR, el RUN ingresado no es valido!" << endl;
+				cin.clear();
+				cin.ignore(256, '\n');
+				cout << " Ingrese un nuevo RUN: "; cin >> RUN;
+				cout << endl;
+			}
+			if (arbolABB.existeFlaite(arbolABB.getRaiz(), RUN)) {
+				arbolABB.eliminar_ABB(arbolABB.getRaiz(), RUN);
+				cout << "Flaite fusilado con exito!." << endl;
+				break;
+			}
+			cout << "No existe flaite con el RUN ingresado." << endl;
 			break;
 		case '3': // Al menu principal
 			flag = true;
@@ -152,6 +160,15 @@ void Menu::modificarArbol()
 		if (flag) break;
 		desplegarMenu2();
 	}
+}
+
+void Menu::crearDelincuente() {
+	string nombre, alias, peligro, delito;
+	int RUN;
+	cout << "\n Para ingresar un flaite rellene los siguientes campos: " << endl;
+	cout << "Nombre: " << endl;
+	cin
+
 }
 
 void Menu::buscarDelincuentes()
@@ -277,7 +294,7 @@ void Menu::cargarArchivos()
 
 		Flaite flaite(nombre, alias, stoi(run), peligro, delito);
 
-		this->arbolABB.agregarFlaite(arbolABB.getRaiz(),flaite);
+		this->arbolABB.agregar_ABB(arbolABB.getRaiz(),flaite);
 		// AGREGAMOS AL AVL
 
 	}

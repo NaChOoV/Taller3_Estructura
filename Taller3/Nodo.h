@@ -10,6 +10,7 @@ public:
 	Nodo*& getDer();
 	void setIzq(Nodo* nuevoNodo);
 	void setDer(Nodo* nuevoNodo);
+	void setFlaite(Flaite);
 	Flaite getFlaite();
 
 
@@ -17,6 +18,7 @@ private:
 	Flaite flaite;
 	Nodo* hDer;
 	Nodo* HIzq;
+
 
 
 };
