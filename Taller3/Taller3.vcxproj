@@ -149,6 +149,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="ABB.h" />
+    <ClInclude Include="AVL.h" />
     <ClInclude Include="Flaite.h" />
     <ClInclude Include="Menu.h" />
     <ClInclude Include="Nodo.h" />
@@ -157,6 +158,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ABB.cpp" />
+    <ClCompile Include="AVL.cpp" />
     <ClCompile Include="Flaite.cpp" />
     <ClCompile Include="Menu.cpp" />
     <ClCompile Include="Nodo.cpp" />

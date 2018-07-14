@@ -89,7 +89,7 @@ int ABB::nivelMasAlto(Nodo* nodoAux, int n)
 
 void ABB::agregar_ABB(Nodo*& nodoAux, Flaite flaite)
 {
-	if (nodoAux == nullptr)  nodoAux = new Nodo(flaite);
+	if (nodoAux == nullptr)  nodoAux = new Nodo(flaite); // Llegamos a un null
 	else {
 		if (nodoAux->getFlaite().getRUN() < flaite.getRUN()) agregar_ABB(nodoAux->getDer(), flaite);			
 		else agregar_ABB(nodoAux->getIzq(), flaite);
@@ -131,25 +131,26 @@ bool ABB::existeFlaite(Nodo* nodoAux,int RUN) {
 	return existeFlaite(nodoAux->getIzq(), RUN) || existeFlaite(nodoAux->getDer(), RUN);
 }
 
-void ABB::buscarRUN(Nodo* nodoAux, int RUN)
+void ABB::buscarRUN(Nodo* nodoAux, int RUN, bool flag)
 {
 	if (nodoAux == nullptr) return;
 	if (nodoAux->getFlaite().getRUN() == RUN ) {
-		this->imprimirFlaite(nodoAux->getFlaite(), false);
+		if(flag) this->imprimirFlaite(nodoAux->getFlaite(), false);
 		return;
 	}
 	if (nodoAux->getFlaite().getRUN() < RUN)
-		buscarRUN(nodoAux->getDer(), RUN);
-	buscarRUN(nodoAux->getIzq(), RUN);
+		buscarRUN(nodoAux->getDer(), RUN, flag);
+	buscarRUN(nodoAux->getIzq(), RUN, flag);
 }
 
-void ABB::buscarCategoria(Nodo* nodoAux, string delito)
+void ABB::buscarCategoria(Nodo* nodoAux, string delito, bool flag)
 {
 	if (nodoAux == nullptr) return;
 	if (compararCategoria(nodoAux->getFlaite().getDelito(), delito))
-		this->imprimirFlaite(nodoAux->getFlaite(), true);
-	buscarCategoria(nodoAux->getIzq(), delito);
-	buscarCategoria(nodoAux->getDer(), delito);
+		if(flag) this->imprimirFlaite(nodoAux->getFlaite(), true);
+	buscarCategoria(nodoAux->getIzq(), delito, flag);
+	buscarCategoria(nodoAux->getDer(), delito, flag);
+
 }
 
 bool ABB::compararCategoria(string del1, string del2)

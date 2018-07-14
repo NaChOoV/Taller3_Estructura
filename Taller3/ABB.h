@@ -20,9 +20,9 @@ public:
 	Nodo*& minimo_masIzquierdo(Nodo*&);
 
 	bool existeFlaite(Nodo* nodoAux,int RUN);
-	void buscarRUN(Nodo* nodoAux, int RUN);
+	void buscarRUN(Nodo* nodoAux, int RUN, bool);
 	
-	void buscarCategoria(Nodo*, string );
+	void buscarCategoria(Nodo*, string, bool );
 	bool compararCategoria(string, string);
 	
 	void imprimirFlaite(Flaite, bool);

@@ -9,13 +9,16 @@
 #include <string>
 #include "ABB.h"
 #include <iostream> 
+#include <stdio.h>
 
 using namespace std;
+LARGE_INTEGER t_ini, t_fin;
 
 
 Menu::Menu()
 {
 	this->arbolABB = ABB();
+	this->arbolAVL = AVL();
 	cargarArchivos();
 	PlaySound(TEXT("ordenypatria.wav"),NULL,SND_ASYNC);
 }
@@ -83,26 +86,26 @@ void Menu::desplegarDelincuentes()
 			cout << "\n::::::::::::::::ARBOL ABB PRE-ORDEN::::::::::::::" << endl;
 			arbolABB.preOrden(arbolABB.getRaiz());
 			cout << "..::::::::::::::ARBOL AVL PRE-ORDEN::::::::::::.." << endl;
-			// arbolAVL.preOrden(arbolABB.getRaiz())
+			arbolAVL.preOrden(arbolAVL.getRaiz());
 			break;
 			
 		case '2':
 			cout << "\n::::::::::::::::ARBOL ABB IN-ORDEN::::::::::::::" << endl;
 			arbolABB.inOrden(arbolABB.getRaiz());
 			cout << "..::::::::::::::ARBOL AVL IN-ORDEN::::::::::::::" << endl;
-			// arbolAVL.inOrden(arbolABB.getRaiz())
+			arbolAVL.inOrden(arbolAVL.getRaiz());
 			break;
 		case '3':
 			cout << "\n::::::::::::::::ARBOL ABB POST-ORDEN::::::::::::::" << endl;
 			arbolABB.postOrden(arbolABB.getRaiz());
 			cout << "::::::::::::::::ARBOL AVL POST-ORDEN::::::::::::::" << endl;
-			// arbolAVL.postOrden(arbolABB.getRaiz())
+			arbolAVL.postOrden(arbolAVL.getRaiz());
 			break;
 		case '4':
 			cout << "\n::::::::::::::::ARBOL ABB POR NIVEL::::::::::::::" << endl;
 			arbolABB.porNivel();
 			cout << "::::::::::::::::ARBOL AVL POR NIVEL::::::::::::::" << endl;
-			// arbolAVL.inOrden(arbolABB.getRaiz())
+			arbolAVL.porNivel();
 			break;
 		case '5':
 			flag = true;
@@ -131,6 +134,8 @@ void Menu::modificarArbol()
 		switch (opcion)
 		{
 		case '1': // Agregamos un delincuente en ambos arboles
+			if (crearDelincuente()) cout << "\nFlaite agregado con exito!. " << endl;
+			else cout << "\nERROR: El flaite ingresado ya existe!." << endl;
 			break;
 		case '2': // Elimiamos un delincuente de ambos arboles
 			cout << "\n Ingrese el RUN del flaite a eliminar: "; cin >> RUN;
@@ -145,10 +150,11 @@ void Menu::modificarArbol()
 			}
 			if (arbolABB.existeFlaite(arbolABB.getRaiz(), RUN)) {
 				arbolABB.eliminar_ABB(arbolABB.getRaiz(), RUN);
+				arbolAVL.eliminar_AVL(arbolAVL.getRaiz(), RUN);
 				cout << "Flaite fusilado con exito!." << endl;
 				break;
 			}
-			cout << "No existe flaite con el RUN ingresado." << endl;
+			cout << "No existe flaite con el RUN ingresado!" << endl;
 			break;
 		case '3': // Al menu principal
 			flag = true;
@@ -162,13 +168,37 @@ void Menu::modificarArbol()
 	}
 }
 
-void Menu::crearDelincuente() {
+bool Menu::crearDelincuente() {
 	string nombre, alias, peligro, delito;
 	int RUN;
-	cout << "\n Para ingresar un flaite rellene los siguientes campos: " << endl;
-	cout << "Nombre: " << endl;
-	cin
+	cout << "\n Para ingresar un flaite rellene los siguientes campos: \n" << endl;
+	cout << "Nombre: ";
+	getline(cin, nombre);
+	cout << "Alias: ";
+	getline(cin, alias);
+	cout << "Nivel de peligro(baja/media/alta): ";
+	getline(cin, peligro);
+	cout << "Delito: ";
+	getline(cin, delito);
+	cout << "RUT(EJEM:12345678): ";
+	cin >> RUN;
+	cin.clear();
+	cin.ignore();
+	while (cin.fail()) {
+		cout << " ERROR, el RUN ingresado no es valido!" << endl;
+		cin.clear();
+		cin.ignore(256, '\n');
+		cout << " Ingrese un nuevo RUN: "; cin >> RUN;
+		cout << endl;
+	}
 
+	Flaite flaite(nombre, alias, RUN, peligro, delito);
+	if (this->arbolABB.existeFlaite(arbolABB.getRaiz(), RUN)) return false;
+
+	this->arbolABB.agregar_ABB(arbolABB.getRaiz(), flaite);
+	this->arbolAVL.agregar_AVL(arbolAVL.getRaiz(), flaite);
+
+	return true;
 }
 
 void Menu::buscarDelincuentes()
@@ -180,6 +210,7 @@ void Menu::buscarDelincuentes()
 	}
 	desplegarMenu3();
 	bool flag = false;
+	double tiempo_ABB, tiempo_AVL;
 	string categoria;
 	int RUN;
 	char opcion;
@@ -208,15 +239,40 @@ void Menu::buscarDelincuentes()
 				cout << "No existe flaite con el RUN ingresado." << endl;
 				break;
 			}
-				
-			arbolABB.buscarRUN(arbolABB.getRaiz(), RUN);
+			cout << "Encontrado!\n" << endl;
+			QueryPerformanceCounter(&t_ini);
+			arbolABB.buscarRUN(arbolABB.getRaiz(), RUN, true);
+			QueryPerformanceCounter(&t_fin);
+			cout << "\n";
+			tiempo_ABB = performancecounter_diff(&t_fin, &t_ini);
+			QueryPerformanceCounter(&t_ini);
+			arbolAVL.buscarRUN(arbolAVL.getRaiz(), RUN, false);
+			QueryPerformanceCounter(&t_fin);
+			tiempo_AVL = performancecounter_diff(&t_fin, &t_ini);
+
+			cout << "ABB: " << tiempo_ABB*1000.0 << " milisegundos." << endl;
+			cout << "AVL: " << tiempo_AVL*1000.0 << " milisegundos." << endl;
+
 			break;
 			
 		case '2': // Buscamos por categoria y se miden los tiempos
 			cout << "\n Ingrese la categoria a consultar: ";
 			cin >> categoria;
 			cout << "\n ||Los/el delincuentes son: \n" << endl;
-			arbolABB.buscarCategoria(arbolABB.getRaiz(), categoria);
+
+			QueryPerformanceCounter(&t_ini);
+			arbolABB.buscarCategoria(arbolABB.getRaiz(), categoria, true);
+			QueryPerformanceCounter(&t_fin);
+			tiempo_ABB = performancecounter_diff(&t_fin, &t_ini);
+			QueryPerformanceCounter(&t_ini);
+			arbolAVL.buscarCategoria(arbolABB.getRaiz(), categoria, false);
+			QueryPerformanceCounter(&t_fin);
+			tiempo_AVL = performancecounter_diff(&t_fin, &t_ini);
+
+			cout << "\nABB: " << tiempo_ABB * 1000.0 << " milisegundos." << endl;
+			cout << "AVL: " << tiempo_AVL * 1000.0 << " milisegundos." << endl;
+
+
 			break;
 		case '3': // Al menu principal
 			flag = true;
@@ -268,6 +324,13 @@ void Menu::desplegarMenu3()
 	cout << "[3]  Regresar al menu                    " << endl;
 }
 
+double Menu::performancecounter_diff(LARGE_INTEGER * a, LARGE_INTEGER * b)
+{
+	LARGE_INTEGER freq;
+	QueryPerformanceFrequency(&freq);
+	return ((double)(a->QuadPart - b->QuadPart) / (double)freq.QuadPart);
+}
+
 void Menu::cargarArchivos()
 {
 	ifstream archivo;
@@ -294,8 +357,8 @@ void Menu::cargarArchivos()
 
 		Flaite flaite(nombre, alias, stoi(run), peligro, delito);
 
-		this->arbolABB.agregar_ABB(arbolABB.getRaiz(),flaite);
-		// AGREGAMOS AL AVL
+		this->arbolABB.agregar_ABB(arbolABB.getRaiz(), flaite);
+		this->arbolAVL.agregar_AVL(arbolAVL.getRaiz(), flaite);
 
 	}
 	archivo.close();

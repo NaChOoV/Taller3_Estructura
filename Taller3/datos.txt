@@ -5,4 +5,4 @@
 19201334,Juan Quispe,el daddy,media,Homicidio
 19511728,Javiera Munoz,la leidy,baja,Hurto
 19398233,Ignacio Fuenzalida,el sapo,baja,Espionaje
-18394283,Ignacio Rivera,el timido,alta,Hentai
+18394283,Ignacio Rivera,4 ojos,alta,Hentai

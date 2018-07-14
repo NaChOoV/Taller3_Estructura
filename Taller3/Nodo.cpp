@@ -8,6 +8,7 @@ Nodo::Nodo(Flaite flaite)
 	this->flaite = flaite;
 	this->hDer = nullptr;
 	this->HIzq = nullptr;
+	this->_fb = 0;
 }
 
 Nodo::~Nodo()
@@ -24,6 +25,11 @@ Nodo *& Nodo::getDer()
 	return this->hDer;
 }
 
+int Nodo::getFB()
+{
+	return this->_fb;
+}
+
 
 void Nodo::setIzq(Nodo * nuevoNodo)
 {
@@ -38,6 +44,11 @@ void Nodo::setDer(Nodo * nuevoNodo)
 void Nodo::setFlaite(Flaite flaite)
 {
 	this->flaite = flaite;
+}
+
+void Nodo::setFB(int fb)
+{
+	_fb = fb;
 }
 
 
