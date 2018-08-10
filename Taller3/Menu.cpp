@@ -20,7 +20,7 @@ Menu::Menu()
 	this->arbolABB = ABB();
 	this->arbolAVL = AVL();
 	cargarArchivos();
-	PlaySound(TEXT("ordenypatria.wav"),NULL,SND_ASYNC);
+	PlaySound(TEXT("ordenypatria.wav"),NULL,SND_ASYNC); // BGM
 }
 
 
@@ -31,8 +31,8 @@ Menu::~Menu()
 void Menu::menuPrincipal()
 {
 
-	desplegarMenu0();
-	bool flag = false;
+	desplegarMenu0(); // menu principal
+	bool flag = false; // variable bool empleada para reconocer la salida del menu (rompe el ciclo while)
 	char opcion;
 	while (true) {
 		fflush(stdin);
@@ -66,15 +66,18 @@ void Menu::menuPrincipal()
 
 void Menu::desplegarDelincuentes()
 {
+	double tiempo_ABB = 0, tiempo_AVL = 0; // almacenan el tiempo de recorrido
+
 	if (arbolABB.getRaiz() == nullptr) {
 		cout << "LOS ARBOLES SE ENCUENTRAN VACIOS." << endl;
 		system("pause");
 		return;
 	}
-	desplegarMenu1();
+	desplegarMenu1(); // subMenu desplegar
 	bool flag = false;
 	char opcion;
 	while (true) {
+		bool flag2 = true;
 		fflush(stdin);
 		cout << "[?] Ingrese una opcion: ";
 		cin >> opcion;
@@ -84,47 +87,84 @@ void Menu::desplegarDelincuentes()
 		{
 		case '1':
 			cout << "\n::::::::::::::::ARBOL ABB PRE-ORDEN::::::::::::::" << endl;
+			QueryPerformanceCounter(&t_ini); // momento de inicio
 			arbolABB.preOrden(arbolABB.getRaiz());
+			QueryPerformanceCounter(&t_fin); // momento de termino
+			tiempo_ABB = performancecounter_diff(&t_fin, &t_ini); // calcula la diferencia para determinar la duracion en milisegundos que tarda la busqueda 
+
+			 // analogamente para el otro arbol
 			cout << "..::::::::::::::ARBOL AVL PRE-ORDEN::::::::::::.." << endl;
+			QueryPerformanceCounter(&t_ini); 
 			arbolAVL.preOrden(arbolAVL.getRaiz());
+			QueryPerformanceCounter(&t_fin); 
+			tiempo_AVL = performancecounter_diff(&t_fin, &t_ini); 
 			break;
 			
 		case '2':
 			cout << "\n::::::::::::::::ARBOL ABB IN-ORDEN::::::::::::::" << endl;
+			QueryPerformanceCounter(&t_ini); // momento de inicio
 			arbolABB.inOrden(arbolABB.getRaiz());
+			QueryPerformanceCounter(&t_fin); // momento de termino
+			tiempo_ABB = performancecounter_diff(&t_fin, &t_ini); // calcula la diferencia para determinar la duracion en milisegundos que tarda la busqueda 
+
 			cout << "..::::::::::::::ARBOL AVL IN-ORDEN::::::::::::::" << endl;
+			QueryPerformanceCounter(&t_ini); // momento de inicio
 			arbolAVL.inOrden(arbolAVL.getRaiz());
+			QueryPerformanceCounter(&t_fin); // momento de termino
+			tiempo_AVL = performancecounter_diff(&t_fin, &t_ini); // analogamente para el otro arbol
 			break;
 		case '3':
 			cout << "\n::::::::::::::::ARBOL ABB POST-ORDEN::::::::::::::" << endl;
+			QueryPerformanceCounter(&t_ini); // momento de inicio
 			arbolABB.postOrden(arbolABB.getRaiz());
+			QueryPerformanceCounter(&t_fin); // momento de termino
+			tiempo_ABB = performancecounter_diff(&t_fin, &t_ini); // calcula la diferencia para determinar la duracion en milisegundos que tarda la busqueda 
+
 			cout << "::::::::::::::::ARBOL AVL POST-ORDEN::::::::::::::" << endl;
+			QueryPerformanceCounter(&t_ini); // momento de inicio
 			arbolAVL.postOrden(arbolAVL.getRaiz());
+			QueryPerformanceCounter(&t_fin); // momento de termino
+			tiempo_AVL = performancecounter_diff(&t_fin, &t_ini); // analogamente para el otro arbol
 			break;
 		case '4':
 			cout << "\n::::::::::::::::ARBOL ABB POR NIVEL::::::::::::::" << endl;
+			QueryPerformanceCounter(&t_ini); // momento de inicio
 			arbolABB.porNivel();
+			QueryPerformanceCounter(&t_fin); // momento de termino
+			tiempo_ABB = performancecounter_diff(&t_fin, &t_ini); // calcula la diferencia para determinar la duracion en milisegundos que tarda la busqueda 
+
 			cout << "::::::::::::::::ARBOL AVL POR NIVEL::::::::::::::" << endl;
+			QueryPerformanceCounter(&t_ini); // momento de inicio
 			arbolAVL.porNivel();
+			QueryPerformanceCounter(&t_fin); // momento de termino
+			tiempo_AVL = performancecounter_diff(&t_fin, &t_ini); // analogamente para el otro arbol
 			break;
 		case '5':
 			flag = true;
 			break;
 		default:
+			flag2 = false;
 			cout << "\n Opcion invalida. " << endl;
 			break;
 		}
 		if (flag) break;
+		if (flag2) {
+			cout << "\n::::::::::::::::ARBOL ABB PRE-ORDEN::::::::::::::\n" << endl;
+			cout << "ABB: " << tiempo_ABB * 1000.0 << " milisegundos." << endl;
+			cout << "AVL: " << tiempo_AVL * 1000.0 << " milisegundos." << endl;
+			cout << "\n::::::::::::::::ARBOL ABB PRE-ORDEN::::::::::::::\n" << endl;
+		}
 		desplegarMenu1();
 	}
 }
 
 void Menu::modificarArbol()
 {
-	desplegarMenu2();
+	desplegarMenu2(); // subMenu modificar
 	bool flag = false;
 	int RUN;
 	char opcion;
+	
 	while (true) {
 		fflush(stdin);
 		cout << "[?] Ingrese una opcion: ";
@@ -141,14 +181,14 @@ void Menu::modificarArbol()
 			cout << "\n Ingrese el RUN del flaite a eliminar: "; cin >> RUN;
 			cout << endl;
 
-			while (cin.fail()) {
+			while (cin.fail()) { // capta ingreso de caracteres no numericos en e RUN 
 				cout << " ERROR, el RUN ingresado no es valido!" << endl;
 				cin.clear();
 				cin.ignore(256, '\n');
 				cout << " Ingrese un nuevo RUN: "; cin >> RUN;
 				cout << endl;
 			}
-			if (arbolABB.existeFlaite(arbolABB.getRaiz(), RUN)) {
+			if (arbolABB.existeFlaite(arbolABB.getRaiz(), RUN)) { // verifica que el delincuente exista para poder eliminarlo 
 				arbolABB.eliminar_ABB(arbolABB.getRaiz(), RUN);
 				arbolAVL.eliminar_AVL(arbolAVL.getRaiz(), RUN);
 				cout << "Flaite fusilado con exito!." << endl;
@@ -184,7 +224,7 @@ bool Menu::crearDelincuente() {
 	cin >> RUN;
 	cin.clear();
 	cin.ignore();
-	while (cin.fail()) {
+	while (cin.fail()) { // capta ingreso de caracteres no numericos en e RUN 
 		cout << " ERROR, el RUN ingresado no es valido!" << endl;
 		cin.clear();
 		cin.ignore(256, '\n');
@@ -192,9 +232,10 @@ bool Menu::crearDelincuente() {
 		cout << endl;
 	}
 
-	Flaite flaite(nombre, alias, RUN, peligro, delito);
-	if (this->arbolABB.existeFlaite(arbolABB.getRaiz(), RUN)) return false;
+	if (this->arbolABB.existeFlaite(arbolABB.getRaiz(), RUN)) return false; // valida que no se ingrese un delincuente existente segun RUN 
 
+
+	Flaite flaite(nombre, alias, RUN, peligro, delito);
 	this->arbolABB.agregar_ABB(arbolABB.getRaiz(), flaite);
 	this->arbolAVL.agregar_AVL(arbolAVL.getRaiz(), flaite);
 
@@ -208,9 +249,9 @@ void Menu::buscarDelincuentes()
 		system("pause");
 		return;
 	}
-	desplegarMenu3();
+	desplegarMenu3(); // subMenu buscar
 	bool flag = false;
-	double tiempo_ABB, tiempo_AVL;
+	double tiempo_ABB, tiempo_AVL; // almacenan el tiempo de busqueda
 	string categoria;
 	int RUN;
 	char opcion;
@@ -226,7 +267,7 @@ void Menu::buscarDelincuentes()
 			cout << "\n Ingrese el RUN a consultar: "; cin >> RUN;
 			cout << endl;
 			
-			while (cin.fail()) {
+			while (cin.fail()) {  // capta ingreso de caracteres no numericos en e RUN 
 				cout << " ERROR, el RUN ingresado no es valido!" << endl;
 				cin.clear();
 				cin.ignore(256, '\n');
@@ -240,11 +281,12 @@ void Menu::buscarDelincuentes()
 				break;
 			}
 			cout << "Encontrado!\n" << endl;
-			QueryPerformanceCounter(&t_ini);
+			QueryPerformanceCounter(&t_ini); // momento de inicio
 			arbolABB.buscarRUN(arbolABB.getRaiz(), RUN, true);
-			QueryPerformanceCounter(&t_fin);
+			QueryPerformanceCounter(&t_fin); // momento de termino
 			cout << "\n";
-			tiempo_ABB = performancecounter_diff(&t_fin, &t_ini);
+			tiempo_ABB = performancecounter_diff(&t_fin, &t_ini); // calcula la diferencia para determinar la duracion en milisegundos que tarda la busqueda 
+			// analogamente para el otro arbol
 			QueryPerformanceCounter(&t_ini);
 			arbolAVL.buscarRUN(arbolAVL.getRaiz(), RUN, false);
 			QueryPerformanceCounter(&t_fin);
@@ -260,10 +302,12 @@ void Menu::buscarDelincuentes()
 			cin >> categoria;
 			cout << "\n ||Los/el delincuentes son: \n" << endl;
 
-			QueryPerformanceCounter(&t_ini);
+			QueryPerformanceCounter(&t_ini);  // momento de inicio
 			arbolABB.buscarCategoria(arbolABB.getRaiz(), categoria, true);
-			QueryPerformanceCounter(&t_fin);
-			tiempo_ABB = performancecounter_diff(&t_fin, &t_ini);
+			QueryPerformanceCounter(&t_fin); // momento de termino 
+			tiempo_ABB = performancecounter_diff(&t_fin, &t_ini); // calcula la diferencia para determinar la duracion en milisegundos que tarda la busqueda 
+
+			//analogamente pra el otro arbol
 			QueryPerformanceCounter(&t_ini);
 			arbolAVL.buscarCategoria(arbolABB.getRaiz(), categoria, false);
 			QueryPerformanceCounter(&t_fin);
@@ -324,7 +368,7 @@ void Menu::desplegarMenu3()
 	cout << "[3]  Regresar al menu                    " << endl;
 }
 
-double Menu::performancecounter_diff(LARGE_INTEGER * a, LARGE_INTEGER * b)
+double Menu::performancecounter_diff(LARGE_INTEGER * a, LARGE_INTEGER * b) // retorna la diferencia en milisegundos 
 {
 	LARGE_INTEGER freq;
 	QueryPerformanceFrequency(&freq);
