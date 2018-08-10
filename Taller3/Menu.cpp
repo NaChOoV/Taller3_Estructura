@@ -149,10 +149,10 @@ void Menu::desplegarDelincuentes()
 		}
 		if (flag) break;
 		if (flag2) {
-			cout << "\n::::::::::::::::ARBOL ABB PRE-ORDEN::::::::::::::\n" << endl;
+			cout << "\n:::::::::::::::::::::TIEMPO::::::::::::::::::::::::::\n" << endl;
 			cout << "ABB: " << tiempo_ABB * 1000.0 << " milisegundos." << endl;
 			cout << "AVL: " << tiempo_AVL * 1000.0 << " milisegundos." << endl;
-			cout << "\n::::::::::::::::ARBOL ABB PRE-ORDEN::::::::::::::\n" << endl;
+			cout << "\n:::::::::::::::::::::::::::::::::::::::::::::::::::::\n" << endl;
 		}
 		desplegarMenu1();
 	}
