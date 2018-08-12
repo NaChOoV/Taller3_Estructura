@@ -77,7 +77,7 @@ void Menu::desplegarDelincuentes()
 	bool flag = false;
 	char opcion;
 	while (true) {
-		bool flag2 = true;
+		bool flag2 = true; // detecta el default case del switch
 		fflush(stdin);
 		cout << "[?] Ingrese una opcion: ";
 		cin >> opcion;
@@ -307,7 +307,7 @@ void Menu::buscarDelincuentes()
 			QueryPerformanceCounter(&t_fin); // momento de termino 
 			tiempo_ABB = performancecounter_diff(&t_fin, &t_ini); // calcula la diferencia para determinar la duracion en milisegundos que tarda la busqueda 
 
-			//analogamente pra el otro arbol
+			//analogamente para el otro arbol
 			QueryPerformanceCounter(&t_ini);
 			arbolAVL.buscarCategoria(arbolABB.getRaiz(), categoria, false);
 			QueryPerformanceCounter(&t_fin);

@@ -2,7 +2,7 @@
 #include "AVL.h"
 #include <algorithm> 
 
-AVL::AVL() : ABB()
+AVL::AVL() : ABB() // la clase AVL es extencion de ABB
 {
 	this->getRaiz() = nullptr;
 }
@@ -12,7 +12,7 @@ AVL::~AVL()
 {	
 }
 
-int AVL::calcularFB(Nodo * nodoAux)
+int AVL::calcularFB(Nodo * nodoAux) // calcula el fartor de balance 
 {
 	if (nodoAux == nullptr) return 0;
 	else if (nodoAux->getIzq() && !nodoAux->getDer()) return calcularFB(nodoAux->getIzq()) + 1;
