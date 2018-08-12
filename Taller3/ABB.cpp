@@ -159,8 +159,7 @@ bool ABB::compararCategoria(string del1, string del2)
 	for (int i = 0;i < del2.length();i++) del2[i] = toupper(del2[i]);
 	
 	return (del1.compare(del2) == 0);
-	//if (del1.compare(del2)) return false;
-	//return true;
+	
 }
 
 void ABB::imprimirFlaite(Flaite flaite, bool categ) 

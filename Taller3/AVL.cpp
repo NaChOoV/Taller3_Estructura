@@ -23,13 +23,13 @@ int AVL::calcularFB(Nodo * nodoAux) // calcula el fartor de balance
 }
 void AVL::agregar_AVL(Nodo*& nodoAux,Flaite flaite)
 {
-	if (nodoAux == nullptr) nodoAux = new Nodo(flaite);	
-	else {
+	if (nodoAux == nullptr) nodoAux = new Nodo(flaite);	// agrega el nodo
+	else {// busca la pocicion de forma recurciba
 		if (nodoAux->getFlaite().getRUN() < flaite.getRUN()) agregar_AVL(nodoAux->getDer(), flaite);
 		else agregar_AVL(nodoAux->getIzq(), flaite);
 	}
-	nodoAux->setFB(calcularFB(nodoAux->getIzq()) - calcularFB(nodoAux->getDer()));
-	rebalance(nodoAux);
+	nodoAux->setFB(calcularFB(nodoAux->getIzq()) - calcularFB(nodoAux->getDer()));// actualiza el factor de balance
+	rebalance(nodoAux);// aplica las rotacione que correspondan
 }
 
 void AVL::rebalance(Nodo *& nodoAux)
