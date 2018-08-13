@@ -93,7 +93,7 @@ void Menu::desplegarDelincuentes()
 			tiempo_ABB = performancecounter_diff(&t_fin, &t_ini); // calcula la diferencia para determinar la duracion en milisegundos que tarda la busqueda 
 
 			 // analogamente para el otro arbol
-			cout << "..::::::::::::::ARBOL AVL PRE-ORDEN::::::::::::.." << endl;
+			cout << "\n..::::::::::::::ARBOL AVL PRE-ORDEN::::::::::::.." << endl;
 			QueryPerformanceCounter(&t_ini); 
 			arbolAVL.preOrden(arbolAVL.getRaiz());
 			QueryPerformanceCounter(&t_fin); 
@@ -107,7 +107,7 @@ void Menu::desplegarDelincuentes()
 			QueryPerformanceCounter(&t_fin); // momento de termino
 			tiempo_ABB = performancecounter_diff(&t_fin, &t_ini); // calcula la diferencia para determinar la duracion en milisegundos que tarda la busqueda 
 
-			cout << "..::::::::::::::ARBOL AVL IN-ORDEN::::::::::::::" << endl;
+			cout << "\n..::::::::::::::ARBOL AVL IN-ORDEN::::::::::::::" << endl;
 			QueryPerformanceCounter(&t_ini); // momento de inicio
 			arbolAVL.inOrden(arbolAVL.getRaiz());
 			QueryPerformanceCounter(&t_fin); // momento de termino
@@ -120,7 +120,7 @@ void Menu::desplegarDelincuentes()
 			QueryPerformanceCounter(&t_fin); // momento de termino
 			tiempo_ABB = performancecounter_diff(&t_fin, &t_ini); // calcula la diferencia para determinar la duracion en milisegundos que tarda la busqueda 
 
-			cout << "::::::::::::::::ARBOL AVL POST-ORDEN::::::::::::::" << endl;
+			cout << "\n::::::::::::::::ARBOL AVL POST-ORDEN::::::::::::::" << endl;
 			QueryPerformanceCounter(&t_ini); // momento de inicio
 			arbolAVL.postOrden(arbolAVL.getRaiz());
 			QueryPerformanceCounter(&t_fin); // momento de termino
@@ -133,7 +133,7 @@ void Menu::desplegarDelincuentes()
 			QueryPerformanceCounter(&t_fin); // momento de termino
 			tiempo_ABB = performancecounter_diff(&t_fin, &t_ini); // calcula la diferencia para determinar la duracion en milisegundos que tarda la busqueda 
 
-			cout << "::::::::::::::::ARBOL AVL POR NIVEL::::::::::::::" << endl;
+			cout << "\n::::::::::::::::ARBOL AVL POR NIVEL::::::::::::::" << endl;
 			QueryPerformanceCounter(&t_ini); // momento de inicio
 			arbolAVL.porNivel();
 			QueryPerformanceCounter(&t_fin); // momento de termino
@@ -236,8 +236,24 @@ bool Menu::crearDelincuente() {
 
 
 	Flaite flaite(nombre, alias, RUN, peligro, delito);
+	
+	double tiempo_ABB = 0, tiempo_AVL = 0;
+
+
+	QueryPerformanceCounter(&t_ini);
 	this->arbolABB.agregar_ABB(arbolABB.getRaiz(), flaite);
+	QueryPerformanceCounter(&t_fin);
+	tiempo_ABB = performancecounter_diff(&t_fin, &t_ini);
+
+	QueryPerformanceCounter(&t_ini);
 	this->arbolAVL.agregar_AVL(arbolAVL.getRaiz(), flaite);
+	QueryPerformanceCounter(&t_fin);
+	tiempo_AVL = performancecounter_diff(&t_fin, &t_ini);
+
+	cout << "\n:::::::::::::::::::::TIEMPO::::::::::::::::::::::::::\n" << endl;
+	cout << "ABB: " << tiempo_ABB * 1000.0 << " milisegundos." << endl;
+	cout << "AVL: " << tiempo_AVL * 1000.0 << " milisegundos." << endl;
+	cout << "\n:::::::::::::::::::::::::::::::::::::::::::::::::::::\n" << endl;
 
 	return true;
 }
@@ -400,7 +416,6 @@ void Menu::cargarArchivos()
 		delito = linea;
 
 		Flaite flaite(nombre, alias, stoi(run), peligro, delito);
-
 		this->arbolABB.agregar_ABB(arbolABB.getRaiz(), flaite);
 		this->arbolAVL.agregar_AVL(arbolAVL.getRaiz(), flaite);
 

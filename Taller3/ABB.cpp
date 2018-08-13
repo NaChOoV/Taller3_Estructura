@@ -166,7 +166,7 @@ void ABB::imprimirFlaite(Flaite flaite, bool categ)
 {
 	string aux = flaite.getNombre();
 	int n = (int)aux.length();
-	cout << "*Nombre: " << flaite.getNombre();
+	cout << "\n*Nombre: " << flaite.getNombre();
 	for (int i = 0;i < 20 - n;i++) { cout << " "; }
 	cout << "| *RUN: " << flaite.getRUN() << endl;
 	aux = flaite.getAlias();
